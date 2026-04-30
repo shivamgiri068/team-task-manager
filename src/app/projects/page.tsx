@@ -59,6 +59,17 @@ export default function ProjectsPage() {
     }
   }
 
+  const handleDeleteProject = async (id: string, e: React.MouseEvent) => {
+    e.preventDefault()
+    if (!confirm('Are you sure you want to delete this project?')) return
+    try {
+      const res = await fetch(`/api/projects/${id}`, { method: 'DELETE' })
+      if (res.ok) fetchProjects()
+    } catch (error) {
+      console.error(error)
+    }
+  }
+
   if (loading) return <div>Loading projects...</div>
 
   return (
@@ -102,8 +113,12 @@ export default function ProjectsPage() {
                     <FolderKanban className="w-6 h-6" />
                   </div>
                   {user?.role === 'ADMIN' && (
-                    <button className="text-gray-400 hover:text-gray-600 p-1 hidden group-hover:block" onClick={(e) => e.preventDefault()}>
-                      <MoreVertical className="w-5 h-5" />
+                    <button 
+                      onClick={(e) => handleDeleteProject(project.id, e)}
+                      className="text-gray-400 hover:text-danger p-1 hidden group-hover:block transition-colors"
+                      title="Delete Project"
+                    >
+                      <Trash2 className="w-5 h-5" />
                     </button>
                   )}
                 </div>

@@ -115,6 +115,16 @@ export default function ProjectDetailPage({ params }: { params: Promise<{ id: st
     }
   }
 
+  const handleDeleteTask = async (taskId: string) => {
+    if (!confirm('Are you sure you want to delete this task?')) return
+    try {
+      const res = await fetch(`/api/tasks/${taskId}`, { method: 'DELETE' })
+      if (res.ok) fetchProject()
+    } catch (error) {
+      console.error(error)
+    }
+  }
+
   if (loading) return <div>Loading project details...</div>
   if (!project) return <div>Project not found</div>
 
@@ -150,7 +160,7 @@ export default function ProjectDetailPage({ params }: { params: Promise<{ id: st
           </h3>
           <div className="space-y-3">
             {project.tasks.filter(t => t.status === 'TODO').map(task => (
-              <TaskCard key={task.id} task={task} onStatusChange={handleStatusChange} userRole={user?.role} userId={user?.id} />
+              <TaskCard key={task.id} task={task} onStatusChange={handleStatusChange} onDeleteTask={handleDeleteTask} userRole={user?.role} userId={user?.id} />
             ))}
           </div>
         </div>
@@ -162,7 +172,7 @@ export default function ProjectDetailPage({ params }: { params: Promise<{ id: st
           </h3>
           <div className="space-y-3">
             {project.tasks.filter(t => t.status === 'IN_PROGRESS').map(task => (
-              <TaskCard key={task.id} task={task} onStatusChange={handleStatusChange} userRole={user?.role} userId={user?.id} />
+              <TaskCard key={task.id} task={task} onStatusChange={handleStatusChange} onDeleteTask={handleDeleteTask} userRole={user?.role} userId={user?.id} />
             ))}
           </div>
         </div>
@@ -174,7 +184,7 @@ export default function ProjectDetailPage({ params }: { params: Promise<{ id: st
           </h3>
           <div className="space-y-3">
             {project.tasks.filter(t => t.status === 'DONE').map(task => (
-              <TaskCard key={task.id} task={task} onStatusChange={handleStatusChange} userRole={user?.role} userId={user?.id} />
+              <TaskCard key={task.id} task={task} onStatusChange={handleStatusChange} onDeleteTask={handleDeleteTask} userRole={user?.role} userId={user?.id} />
             ))}
           </div>
         </div>
@@ -253,7 +263,9 @@ export default function ProjectDetailPage({ params }: { params: Promise<{ id: st
   )
 }
 
-function TaskCard({ task, onStatusChange, userRole, userId }: { task: Task, onStatusChange: any, userRole: string | undefined, userId: string | undefined }) {
+import { Trash2 } from 'lucide-react'
+
+function TaskCard({ task, onStatusChange, onDeleteTask, userRole, userId }: { task: Task, onStatusChange: any, onDeleteTask: any, userRole: string | undefined, userId: string | undefined }) {
   const isAssignee = task.assignee?.id === userId
   const canEditStatus = userRole === 'ADMIN' || isAssignee
 
@@ -284,17 +296,24 @@ function TaskCard({ task, onStatusChange, userRole, userId }: { task: Task, onSt
           )}
         </div>
 
-        {canEditStatus && (
-          <select 
-            value={task.status}
-            onChange={(e) => onStatusChange(task.id, e.target.value)}
-            className="text-xs border-none bg-transparent text-primary font-medium focus:ring-0 cursor-pointer"
-          >
-            <option value="TODO">To Do</option>
-            <option value="IN_PROGRESS">In Progress</option>
-            <option value="DONE">Done</option>
-          </select>
-        )}
+        <div className="flex items-center gap-2">
+          {canEditStatus && (
+            <select 
+              value={task.status}
+              onChange={(e) => onStatusChange(task.id, e.target.value)}
+              className="text-xs border-none bg-transparent text-primary font-medium focus:ring-0 cursor-pointer"
+            >
+              <option value="TODO">To Do</option>
+              <option value="IN_PROGRESS">In Progress</option>
+              <option value="DONE">Done</option>
+            </select>
+          )}
+          {userRole === 'ADMIN' && (
+            <button onClick={() => onDeleteTask(task.id)} className="text-gray-400 hover:text-danger p-1 transition-colors">
+              <Trash2 className="w-4 h-4" />
+            </button>
+          )}
+        </div>
       </div>
     </div>
   )
