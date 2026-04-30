@@ -13,7 +13,7 @@ export default async function Home() {
     <div className="min-h-screen flex flex-col items-center justify-center bg-gradient-to-br from-indigo-50 to-white">
       <div className="max-w-3xl px-6 text-center">
         <h1 className="text-5xl md:text-7xl font-extrabold tracking-tight text-secondary mb-6">
-          Ethara<span className="text-primary">.Ai</span> Team Tasks
+          Team Task Manager
         </h1>
         <p className="text-xl md:text-2xl text-text-muted mb-10">
           Manage your projects, assign tasks, and track team progress all in one place with role-based access control.

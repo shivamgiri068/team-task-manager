@@ -16,7 +16,7 @@ export default function Sidebar() {
   return (
     <div className="flex flex-col w-64 bg-secondary text-white min-h-screen">
       <div className="flex items-center justify-center h-16 border-b border-white/10">
-        <span className="text-xl font-bold tracking-wider text-white">Ethara<span className="text-primary">.Ai</span></span>
+        <span className="text-xl font-bold tracking-wider text-white">Team Task Manager</span>
       </div>
       <div className="flex flex-col flex-1 overflow-y-auto">
         <nav className="flex-1 px-4 py-6 space-y-2">

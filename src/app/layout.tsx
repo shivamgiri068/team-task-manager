@@ -12,7 +12,7 @@ const inter = Inter({
 });
 
 export const metadata: Metadata = {
-  title: "Ethara.Ai Team Task Manager",
+  title: "Team Task Manager",
   description: "Manage your team's tasks and projects efficiently.",
 };
 
